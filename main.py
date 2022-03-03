@@ -264,7 +264,7 @@ input_email.grid(row = 4, column = 1, sticky=W)
 button_0 = Button(mainframe, text="Pull Touchdowns", height = 1, width = 20, command = cbsql_basic, bg = 'green', fg = 'white', font = '-family "SF Espresso Shack" -size 12')
 button_0.grid(row = 5, column = 0, sticky=E)
 
-button_1 = Button(mainframe, text="Automated Weekly Reports", height = 1, width = 20, command = automate, bg = 'blue', fg = 'white', font = '-family "SF Espresso Shack" -size 12')
+button_1 = Button(mainframe, text="Automated Weekly Reports", height = 1, width = 25, command = automate, bg = 'blue', fg = 'white', font = '-family "SF Espresso Shack" -size 12')
 button_1.grid(row = 5, column = 1, sticky=W)
 
 ### Main loop
