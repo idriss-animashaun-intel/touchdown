@@ -6,35 +6,35 @@ import time
 from subprocess import Popen
 
 
-slice_tracker_master_directory = os.getcwd()
-slice_tracker_directory = slice_tracker_master_directory+"\slicetrackpuller-updates"
-slice_tracker_file = slice_tracker_directory+"\\main\\main.exe"
-slice_tracker_rev = slice_tracker_directory+"\\Rev.txt"
+touchdown_master_directory = os.getcwd()
+touchdown_directory = touchdown_master_directory+"\\touchdown-updates"
+touchdown_file = touchdown_directory+"\\main\\main.exe"
+touchdown_rev = touchdown_directory+"\\Rev.txt"
 
 
 def installation():
     print("*** Downloading new version ***")
-    urllib.request.urlretrieve("https://gitlab.devtools.intel.com/ianimash/slicetrackpuller/-/archive/updates/slicetrackpuller-updates.zip", slice_tracker_master_directory+"\\slicetrackpuller_new.zip")
+    urllib.request.urlretrieve("https://gitlab.devtools.intel.com/ianimash/touchdown/-/archive/updates/touchdown-updates.zip", touchdown_master_directory+"\\touchdown_new.zip")
     print("*** Extracting new version ***")
-    zip_ref = zipfile.ZipFile(slice_tracker_master_directory+"\slicetrackpuller_new.zip", 'r')
-    zip_ref.extractall(slice_tracker_master_directory)
+    zip_ref = zipfile.ZipFile(touchdown_master_directory+"\\touchdown_new.zip", 'r')
+    zip_ref.extractall(touchdown_master_directory)
     zip_ref.close()
-    os.remove(slice_tracker_master_directory+"\slicetrackpuller_new.zip")
+    os.remove(touchdown_master_directory+"\\touchdown_new.zip")
     time.sleep(5)
     
 def upgrade():    
     print("*** Removing old files ***")
-    shutil.rmtree(slice_tracker_directory)
+    shutil.rmtree(touchdown_directory)
     time.sleep(10)
     installation()
 
 
-### Is slice_tracker already installed? If yes get file size to compare for upgrade
-if os.path.isfile(slice_tracker_file):
-    local_file_size = int(os.path.getsize(slice_tracker_rev))
+### Is touchdown already installed? If yes get file size to compare for upgrade
+if os.path.isfile(touchdown_file):
+    local_file_size = int(os.path.getsize(touchdown_rev))
     # print(local_file_size)
     ### Check if update needed:
-    f = urllib.request.urlopen("https://gitlab.devtools.intel.com/ianimash/slicetrackpuller/-/raw/updates/Rev.txt") # points to the exe file for size
+    f = urllib.request.urlopen("https://gitlab.devtools.intel.com/ianimash/touchdown/-/raw/updates/Rev.txt") # points to the exe file for size
     i = f.info()
     web_file_size = int(i["Content-Length"])
     # print(web_file_size)
@@ -47,9 +47,9 @@ if os.path.isfile(slice_tracker_file):
         elif updt == "Y":
             upgrade()
 
-### slice_tracker wasn't installed, so we download and install it here                
+### touchdown wasn't installed, so we download and install it here                
 else:
-    install = input("Welcome to slice_tracker! If you enter <y> SliceTrackPuller will be downloaded in the same folder where this file is.\nAfter the installation, this same file you are running now (\"slice_tracker.exe\") will the one to use to open slice_tracker :)\nEnter any other key to skip the download\n -->")
+    install = input("Welcome to touchdown! If you enter <y> Touchdown will be downloaded in the same folder where this file is.\nAfter the installation, this same file you are running now (\"touchdown.exe\") will the one to use to open touchdown :)\nEnter any other key to skip the download\n -->")
     if install == "y":
         installation()
     elif install == "Y":
@@ -60,8 +60,8 @@ print('Ready')
 
 ### We open the real application:
 try:
-    Popen(slice_tracker_file)
-    print("*** Opening SliceTrackPuller ***")
+    Popen(touchdown_file)
+    print("*** Opening Touchdown ***")
     time.sleep(20)
 except:
     print('Failed to open application, Please open manually in subfolder')
