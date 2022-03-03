@@ -1,0 +1,7 @@
+Output_touchdown
+__pycache__
+*.vs
+build
+dist
+*.spec
+main.py
