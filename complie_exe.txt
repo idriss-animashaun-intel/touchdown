@@ -1,0 +1,7 @@
+
+pyinstaller --noconfirm --onedir --console ^
+--add-data "Inputs;Inputs/" ^
+"main.py"
+
+pyinstaller --noconfirm --onefile --console ^
+"Touchdown.py"

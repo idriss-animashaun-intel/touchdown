@@ -1,5 +1,4 @@
 import os
-import sys
 from tkinter import *
 from tkinter import Tk
 from tkinter import Button
@@ -29,7 +28,6 @@ def resource_path(relative_path):
 
 def cbilocator():
     temp = location.split("\\",20)
-    # print('temp',temp)
     index = temp.index('Users') + 2
     start_path = ''
     for i in range(0, index):
@@ -37,7 +35,6 @@ def cbilocator():
     start_path = start_path[:-1]
     return start_path + r'\CrystalBall\Production\CBCLI.exe'
 
-### SQL for rollups
 def cbsql_basic():
     global output_file
     global file_name
@@ -231,7 +228,7 @@ def callback(url):
 
 link1 = Label(mainframe, text="Wiki: https://goto/touchdown", fg="blue", cursor="hand2")
 link1.grid(row = 0,column = 0, sticky=W, columnspan = 2)
-link1.bind("<Button-1>", lambda e: callback("https://gitlab.devtools.intel.com/ianimash/slicetrackpuller/-/wikis/SliceTrackPuller"))
+link1.bind("<Button-1>", lambda e: callback("https://gitlab.devtools.intel.com/ianimash/touchdown/-/wikis/Touchdown"))
 
 link2 = Label(mainframe, text="IT support contact: ricard.menchon.enrich@intel.com or idriss.animashaun@intel.com", fg="blue", cursor="hand2")
 link2.grid(row = 1,column = 0, sticky=W, columnspan = 2)
@@ -242,7 +239,8 @@ label_2.grid(row = 1, column = 2, sticky=E)
 variable = StringVar(mainframe)
 variable.set("D1C") # default value
 
-sel_prod = OptionMenu(mainframe, variable, "F28", "D1C" "D1D", "F32", "F24")
+sel_prod = OptionMenu(mainframe, variable, "F28", "D1C" "D1D", "F32", "F24", "F68", "F21")
+
 sel_prod.grid(row = 2, column = 2, sticky=W)
 
 label_0 = Label(mainframe, text = 'Enter Full Product Code: ', bg  ='black', fg = 'white')
@@ -266,7 +264,7 @@ input_email.grid(row = 4, column = 1, sticky=W)
 button_0 = Button(mainframe, text="Pull Touchdowns", height = 1, width = 20, command = cbsql_basic, bg = 'green', fg = 'white', font = '-family "SF Espresso Shack" -size 12')
 button_0.grid(row = 5, column = 0, sticky=E)
 
-button_1 = Button(mainframe, text="Automate Weekly reports", height = 1, width = 20, command = automate, bg = 'blue', fg = 'white', font = '-family "SF Espresso Shack" -size 12')
+button_1 = Button(mainframe, text="Automated Weekly Reports", height = 1, width = 20, command = automate, bg = 'blue', fg = 'white', font = '-family "SF Espresso Shack" -size 12')
 button_1.grid(row = 5, column = 1, sticky=W)
 
 ### Main loop
