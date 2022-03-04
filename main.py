@@ -62,12 +62,23 @@ def cbsql_basic():
     fo.write("select ats.devrevstep, ats.WAFER_ID, SUM(ats.WAFER_ID/ats.WAFER_ID) as Touchdowns\n")
     fo.write("from a_testing_session ats\n")
     fo.write("where ats.LOT like '3%'\n")
+    
     if multi == 0:
-        fo.write("and ats.devrevstep = " + "'" + product_list[0] + "'" + "\n")
+        if '%' in product_list[0]:
+            fo.write("and ats.devrevstep like " + "'" + product_list[0] + "'" + "\n")
+        else:
+            fo.write("and ats.devrevstep = " + "'" + product_list[0] + "'" + "\n")
     else:
-        fo.write("and ats.devrevstep = " + "'" + product_list[0] + "'" + "\n")
+        if '%' in product_list[0]:
+            fo.write("and ats.devrevstep like " + "'" + product_list[0] + "'" + "\n")
+        else:
+            fo.write("and ats.devrevstep = " + "'" + product_list[0] + "'" + "\n")
         for j in range(1,len(product_list)):
-            fo.write("or ats.devrevstep = " + "'" + product_list[j] + "'" + "\n")
+            if '%' in product_list[0]:
+                fo.write("or ats.devrevstep like " + "'" + product_list[j] + "'" + "\n")
+            else:
+                fo.write("or ats.devrevstep = " + "'" + product_list[j] + "'" + "\n")
+
     fo.write("and ats.latest_flag = 'Y'\n")
     fo.write("group by ats.WAFER_ID, ats.devrevstep\n")
     fo.write("order by ats.devrevstep, ats.WAFER_ID\n")
@@ -84,11 +95,18 @@ def cbsql_basic():
 def reformat():
     global output_file
     global output_file_csv
-    file = pd.read_csv(output_file, delim_whitespace=True)
-    file.to_csv(output_file + '.csv', encoding='utf-8', index=False)
-    remove(output_file)
-    output_file_csv = output_file + '.csv'
-    run_jrp()
+    found_data = 0
+    try:
+        file = pd.read_csv(output_file, delim_whitespace=True)
+        file.to_csv(output_file + '.csv', encoding='utf-8', index=False)
+        remove(output_file)
+        output_file_csv = output_file + '.csv'
+        found_data = 1
+    except:
+        print('Query Returned Empty, No Data Found')
+    
+    if found_data == 1:
+        run_jrp()
 
 def automate():
 
@@ -229,7 +247,7 @@ sel_prod = OptionMenu(mainframe, variable, "F28", "D1C", "D1D", "F32", "F24", "F
 
 sel_prod.grid(row = 2, column = 2, sticky=W)
 
-label_0 = Label(mainframe, text = 'Enter Full Product Code: ', bg  ='black', fg = 'white')
+label_0 = Label(mainframe, text = 'Enter Product Code  [Use % for regex]: ', bg  ='black', fg = 'white')
 label_0.grid(row = 2, sticky=E)
 prod_code = Entry(mainframe, width=40, relief = FLAT)
 prod_code.insert(4,'8PFQCVBH,8PFQCVCH')
