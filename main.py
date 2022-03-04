@@ -10,30 +10,16 @@ from subprocess import call
 from re import sub
 from os import remove
 import datetime
-from pathlib import Path
 import win32com.client as win32
 import pandas as pd
 import json
+from general_lib import *
 
 location = os.getcwd()
 
 dir = os.path.join("Output_touchdown")
 if not os.path.exists(dir):
     os.mkdir(dir)
-
-def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
-    path = Path(__file__).parent / relative_path
-    return str(path)
-
-def cbilocator():
-    temp = location.split("\\",20)
-    index = temp.index('Users') + 2
-    start_path = ''
-    for i in range(0, index):
-        start_path += temp[i] + '\\'
-    start_path = start_path[:-1]
-    return start_path + r'\CrystalBall\Production\CBCLI.exe'
 
 def cbsql_basic():
     global output_file
