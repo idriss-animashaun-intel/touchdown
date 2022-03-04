@@ -106,7 +106,10 @@ def reformat():
         print('Query Returned Empty, No Data Found')
     
     if found_data == 1:
-        run_jrp()
+        try:
+            run_jrp()
+        except:
+            print('your version of JMP is not supported. Analysis completed check Output_touchdown folder for data')
 
 def automate():
 
@@ -165,6 +168,8 @@ def automate():
 
     mail.Send()
 
+    print('Request Submitted')
+
 def remove_zero():
     global split_wfr_list
     split_wfr_list = wfr.get().replace(" ", "").split(",")
@@ -214,6 +219,7 @@ def run_jrp():
         writing_file.close()    
     
     os.system(user_script)
+    print('Analysis completed check Output_touchdown folder for data. JMP report will open automatically')
 
 cblocation = cbilocator()
 
