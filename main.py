@@ -112,6 +112,7 @@ def reformat():
             print('your version of JMP is not supported. Analysis completed check Output_touchdown folder for data')
 
 def automate():
+    store_val()
 
     print('Summary')
 
@@ -142,7 +143,7 @@ def automate():
     mail.To = 'idriss.animashaun@intel.com'
     mail.Subject = 'Please add report to automated scripts'
     mail.Body = f'''    Script Name: {script_name}
-    Send Email To:,{report_email}\n
+    Send Email To: {report_email}\n
     Wafer/s:  {split_wfr_list}\n
     <analysis app=cb  >
     TOOL=RUNSQL
@@ -221,7 +222,25 @@ def run_jrp():
     os.system(user_script)
     print('Analysis completed check Output_touchdown folder for data. JMP report will open automatically')
 
+def store_val():
+    prod_1 = prod_code.get()
+    wafr_1 = wfr.get()
+    e_mail_1 = input_email.get()
+    store_info = [prod_1,wafr_1,e_mail_1]
+
+    write_hist_file = open(hist_path, "w")
+    for i in store_info:
+        write_hist_file.write(str(i)+'\n')
+    write_hist_file.close()
+
 cblocation = cbilocator()
+
+hist_path = resource_path("Inputs\\INFO.tmp");
+read_hist_file = open(hist_path, "r")
+
+prod = read_hist_file.readline().strip('\n')
+wafr = read_hist_file.readline().strip('\n')
+e_mail = read_hist_file.readline().strip('\n')
 
 ### Main Root
 root = Tk()
@@ -256,19 +275,19 @@ sel_prod.grid(row = 2, column = 2, sticky=W)
 label_0 = Label(mainframe, text = 'Enter Product Code  [Use % for regex]: ', bg  ='black', fg = 'white')
 label_0.grid(row = 2, sticky=E)
 prod_code = Entry(mainframe, width=40, relief = FLAT)
-prod_code.insert(4,'8PFQCVBH,8PFQCVCH')
+prod_code.insert(4,prod)
 prod_code.grid(row = 2, column = 1, sticky=W)
 
 label_1 = Label(mainframe, text = 'Enter List of Wafer (Optional): ', bg  ='black', fg = 'white')
 label_1.grid(row = 3, sticky=E)
 wfr = Entry(mainframe, width=40, relief = FLAT)
-wfr.insert(4,'089,372')
+wfr.insert(4,wafr)
 wfr.grid(row = 3, column = 1, sticky=W)
 
 label_2 = Label(mainframe, text = 'Enter Email For Weekly Reports: ', bg  ='black', fg = 'white')
 label_2.grid(row = 4, sticky=E)
 input_email = Entry(mainframe, width=40, relief = FLAT)
-input_email.insert(4,'johnDoe@intel.com')
+input_email.insert(4,e_mail)
 input_email.grid(row = 4, column = 1, sticky=W)
 
 button_0 = Button(mainframe, text="Pull Touchdowns", height = 1, width = 20, command = cbsql_basic, bg = 'green', fg = 'white', font = '-family "SF Espresso Shack" -size 12')
