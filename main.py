@@ -239,7 +239,7 @@ label_2.grid(row = 1, column = 2, sticky=E)
 variable = StringVar(mainframe)
 variable.set("D1C") # default value
 
-sel_prod = OptionMenu(mainframe, variable, "F28", "D1C" "D1D", "F32", "F24", "F68", "F21")
+sel_prod = OptionMenu(mainframe, variable, "F28", "D1C", "D1D", "F32", "F24", "F68", "F21")
 
 sel_prod.grid(row = 2, column = 2, sticky=W)
 
