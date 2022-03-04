@@ -24,6 +24,9 @@ if not os.path.exists(dir):
 def cbsql_basic():
     global output_file
     global file_name
+
+    store_val()
+    
     today = datetime.datetime.now()
     date_time = today.strftime("%d-%m-%Y_%H-%M-%S")
 
