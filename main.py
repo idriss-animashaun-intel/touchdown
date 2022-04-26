@@ -78,7 +78,7 @@ def cbsql_basic():
                     (
                     select table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT
                     from (
-                        select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ats.LOT like 'D%') THEN ats.LOT ELSE 'NO_PROD_LOT' END as PROD_LOT, ats.WAFER_SCRIBE
+                        select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ats.LOT NOT LIKE '3%' AND ats.LOT NOT LIKE '4%') THEN ats.LOT ELSE 'NO_PROD_LOT' END as PROD_LOT, ats.WAFER_SCRIBE
                         from (
                             select ats.WAFER_SCRIBE, ats.WAFER_ID, ats.devrevstep, idriss.Touchdowns
                             from a_testing_session   ats,
@@ -118,7 +118,7 @@ def cbsql_basic():
                         (
                         select table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT
                         from (
-                            select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ats.LOT like 'D%') THEN ats.LOT ELSE 'NO_PROD_LOT' END as PROD_LOT, ats.WAFER_SCRIBE
+                            select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ats.LOT NOT LIKE '3%' AND ats.LOT NOT LIKE '4%') THEN ats.LOT ELSE 'NO_PROD_LOT' END as PROD_LOT, ats.WAFER_SCRIBE
                             from (
                                 select ats.WAFER_SCRIBE, ats.WAFER_ID, ats.devrevstep, idriss.Touchdowns
                                 from a_testing_session   ats,
@@ -149,14 +149,14 @@ def cbsql_basic():
                             and ats.latest_flag   = 'Y'
                             order by ats.devrevstep, ats.WAFER_ID
                             ) table
-                        where table.PROD_LOT like 'D%'
+                        where (table.PROD_LOT NOT LIKE '3%' AND table.PROD_LOT NOT LIKE '4%')
                         group by table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT
                         order by table.devrevstep, table.WAFER_ID
                         )	Dtable,
                         (
                         select table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT
                         from (
-                            select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ats.LOT like 'D%') THEN ats.LOT ELSE 'NO_PROD_LOT' END as PROD_LOT, ats.WAFER_SCRIBE
+                            select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ats.LOT NOT LIKE '3%' AND ats.LOT NOT LIKE '4%') THEN ats.LOT ELSE 'NO_PROD_LOT' END as PROD_LOT, ats.WAFER_SCRIBE
                             from (
                                 select ats.WAFER_SCRIBE, ats.WAFER_ID, ats.devrevstep, idriss.Touchdowns
                                 from a_testing_session   ats,
@@ -195,7 +195,7 @@ def cbsql_basic():
                     group by NAtable.devrevstep, NAtable.WAFER_ID, NAtable.Touchdowns, NAtable.PROD_LOT
                     order by NAtable.devrevstep, NAtable.WAFER_ID
                     )
-                or alltable.PROD_LOT like 'D%'
+                or (alltable.PROD_LOT NOT LIKE '3%' AND alltable.PROD_LOT NOT LIKE '4%')
                 group by alltable.devrevstep, alltable.WAFER_ID, alltable.Touchdowns, alltable.PROD_LOT
                 order by alltable.devrevstep, alltable.WAFER_ID
 
@@ -262,7 +262,7 @@ def automate():
             devrevstep+= "or ats.devrevstep like '" + product_list[j] + "'"
         devrevstep+= ")"
 
-    script_name =  sub(r"\s", "_", str(name)) + "_weekly_report"
+    script_name =  sub(r"\s", "_", str(name))
 
     outlook = win32.Dispatch('outlook.application')
     mail = outlook.CreateItem(0)
@@ -283,7 +283,7 @@ def automate():
                     (
                     select table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT
                     from (
-                        select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ats.LOT like 'D%') THEN ats.LOT ELSE 'NO_PROD_LOT' END as PROD_LOT, ats.WAFER_SCRIBE
+                        select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ats.LOT NOT LIKE '3%' AND ats.LOT NOT LIKE '4%') THEN ats.LOT ELSE 'NO_PROD_LOT' END as PROD_LOT, ats.WAFER_SCRIBE
                         from (
                             select ats.WAFER_SCRIBE, ats.WAFER_ID, ats.devrevstep, idriss.Touchdowns
                             from a_testing_session   ats,
@@ -323,7 +323,7 @@ def automate():
                         (
                         select table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT
                         from (
-                            select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ats.LOT like 'D%') THEN ats.LOT ELSE 'NO_PROD_LOT' END as PROD_LOT, ats.WAFER_SCRIBE
+                            select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ats.LOT NOT LIKE '3%' AND ats.LOT NOT LIKE '4%') THEN ats.LOT ELSE 'NO_PROD_LOT' END as PROD_LOT, ats.WAFER_SCRIBE
                             from (
                                 select ats.WAFER_SCRIBE, ats.WAFER_ID, ats.devrevstep, idriss.Touchdowns
                                 from a_testing_session   ats,
@@ -354,14 +354,14 @@ def automate():
                             and ats.latest_flag   = 'Y'
                             order by ats.devrevstep, ats.WAFER_ID
                             ) table
-                        where table.PROD_LOT like 'D%'
+                        where (table.PROD_LOT NOT LIKE '3%' AND table.PROD_LOT NOT LIKE '4%')
                         group by table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT
                         order by table.devrevstep, table.WAFER_ID
                         )	Dtable,
                         (
                         select table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT
                         from (
-                            select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ats.LOT like 'D%') THEN ats.LOT ELSE 'NO_PROD_LOT' END as PROD_LOT, ats.WAFER_SCRIBE
+                            select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ats.LOT NOT LIKE '3%' AND ats.LOT NOT LIKE '4%') THEN ats.LOT ELSE 'NO_PROD_LOT' END as PROD_LOT, ats.WAFER_SCRIBE
                             from (
                                 select ats.WAFER_SCRIBE, ats.WAFER_ID, ats.devrevstep, idriss.Touchdowns
                                 from a_testing_session   ats,
@@ -400,7 +400,7 @@ def automate():
                     group by NAtable.devrevstep, NAtable.WAFER_ID, NAtable.Touchdowns, NAtable.PROD_LOT
                     order by NAtable.devrevstep, NAtable.WAFER_ID
                     )
-                or alltable.PROD_LOT like 'D%'
+                or (alltable.PROD_LOT NOT LIKE '3%' AND alltable.PROD_LOT NOT LIKE '4%')
                 group by alltable.devrevstep, alltable.WAFER_ID, alltable.Touchdowns, alltable.PROD_LOT
                 order by alltable.devrevstep, alltable.WAFER_ID
 

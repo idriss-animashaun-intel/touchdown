@@ -6,3 +6,4 @@ dist
 *.spec
 touchdown-updates
 cbcli_loc.txt
+automated_outputs
