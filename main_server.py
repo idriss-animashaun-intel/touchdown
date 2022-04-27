@@ -133,8 +133,15 @@ def run_jrp():
 
 def send_mail():
     print('hello')
-
+    outlook = win32.Dispatch('outlook.application')
+    mail = outlook.CreateItem(0)
+    mail.To = 'idriss.animashaun@intel.com'
+    mail.Subject = 'testing'
+    mail.Body = 'Report attached'
+    mail.Attachments.Add(r'C:\Users\ianimash\source\repos\touchdown\complie_exe.txt')
+    mail.Send()
 
 
 cblocation = cbilocator()
-interate()
+# interate()
+send_mail()
