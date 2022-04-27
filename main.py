@@ -73,19 +73,19 @@ def cbsql_basic():
                 OUTPUT='""" + str(output_file) + """'
                 /ASMERLIN
                 <SQL >
-                select alltable.devrevstep, alltable.WAFER_ID, alltable.Touchdowns, alltable.PROD_LOT
+                select alltable.devrevstep, alltable.WAFER_ID, alltable.Touchdowns, alltable.SORT_LOT
                 from
                     (
-                    select table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT
+                    select table.devrevstep, table.WAFER_ID, table.Touchdowns, table.SORT_LOT
                     from (
-                        select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ats.LOT NOT LIKE '3%' AND ats.LOT NOT LIKE '4%') THEN ats.LOT ELSE 'NO_PROD_LOT' END as PROD_LOT, ats.WAFER_SCRIBE
+                        select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ISNUMERIC(SUBSTRING(ats.LOT, 1, 1))!=1) THEN ats.LOT ELSE 'LOT_NOT_FOUND' END as SORT_LOT, ats.WAFER_SCRIBE
                         from (
                             select ats.WAFER_SCRIBE, ats.WAFER_ID, ats.devrevstep, idriss.Touchdowns
                             from a_testing_session   ats,
                                 (
                                     select ats.WAFER_ID, ats.devrevstep, COUNT(ats.WAFER_ID) as Touchdowns
                                     from a_testing_session   ats
-                                    where (ats.LOT like '3%' or ats.LOT like '4%') 
+                                    where ISNUMERIC(SUBSTRING(ats.LOT, 1, 1)) = 1 
                                     """ + devrevstep + """
                                     and   ats.latest_flag = 'Y'
                                     group by ats.WAFER_ID, ats.devrevstep
@@ -93,7 +93,7 @@ def cbsql_basic():
                                 ) idriss
 
                             where
-                            (ats.LOT like '3%' or ats.LOT like '4%') 
+                            ISNUMERIC(SUBSTRING(ats.LOT, 1, 1)) = 1 
                             and ats.devrevstep = idriss.devrevstep
                             and ats.WAFER_ID = idriss.WAFER_ID
                             and ats.latest_flag = 'Y'
@@ -108,7 +108,7 @@ def cbsql_basic():
                             and ats.latest_flag   = 'Y'
                             order by ats.devrevstep, ats.WAFER_ID
                         ) table
-                    group by table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT
+                    group by table.devrevstep, table.WAFER_ID, table.Touchdowns, table.SORT_LOT
                     order by table.devrevstep, table.WAFER_ID
                     ) alltable
                 where alltable.WAFER_ID not in
@@ -116,16 +116,16 @@ def cbsql_basic():
                     select NAtable.WAFER_ID
                     from
                         (
-                        select table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT
+                        select table.devrevstep, table.WAFER_ID, table.Touchdowns, table.SORT_LOT
                         from (
-                            select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ats.LOT NOT LIKE '3%' AND ats.LOT NOT LIKE '4%') THEN ats.LOT ELSE 'NO_PROD_LOT' END as PROD_LOT, ats.WAFER_SCRIBE
+                            select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ISNUMERIC(SUBSTRING(ats.LOT, 1, 1))!=1) THEN ats.LOT ELSE 'LOT_NOT_FOUND' END as SORT_LOT, ats.WAFER_SCRIBE
                             from (
                                 select ats.WAFER_SCRIBE, ats.WAFER_ID, ats.devrevstep, idriss.Touchdowns
                                 from a_testing_session   ats,
                                     (
                                         select ats.WAFER_ID, ats.devrevstep, COUNT(ats.WAFER_ID) as Touchdowns
                                         from a_testing_session   ats
-                                        where (ats.LOT like '3%' or ats.LOT like '4%') 
+                                        where ISNUMERIC(SUBSTRING(ats.LOT, 1, 1)) = 1 
                                         """ + devrevstep + """
                                         and   ats.latest_flag = 'Y'
                                         group by ats.WAFER_ID, ats.devrevstep
@@ -133,7 +133,7 @@ def cbsql_basic():
                                     ) idriss
 
                                 where
-                                (ats.LOT like '3%' or ats.LOT like '4%') 
+                                ISNUMERIC(SUBSTRING(ats.LOT, 1, 1)) = 1 
                                 and ats.devrevstep = idriss.devrevstep
                                 and ats.WAFER_ID = idriss.WAFER_ID
                                 and ats.latest_flag = 'Y'
@@ -149,21 +149,21 @@ def cbsql_basic():
                             and ats.latest_flag   = 'Y'
                             order by ats.devrevstep, ats.WAFER_ID
                             ) table
-                        where (table.PROD_LOT NOT LIKE '3%' AND table.PROD_LOT NOT LIKE '4%')
-                        group by table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT
+                        where table.SORT_LOT != 'LOT_NOT_FOUND'
+                        group by table.devrevstep, table.WAFER_ID, table.Touchdowns, table.SORT_LOT
                         order by table.devrevstep, table.WAFER_ID
                         )	Dtable,
                         (
-                        select table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT
+                        select table.devrevstep, table.WAFER_ID, table.Touchdowns, table.SORT_LOT
                         from (
-                            select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ats.LOT NOT LIKE '3%' AND ats.LOT NOT LIKE '4%') THEN ats.LOT ELSE 'NO_PROD_LOT' END as PROD_LOT, ats.WAFER_SCRIBE
+                            select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ISNUMERIC(SUBSTRING(ats.LOT, 1, 1))!=1) THEN ats.LOT ELSE 'LOT_NOT_FOUND' END as SORT_LOT, ats.WAFER_SCRIBE
                             from (
                                 select ats.WAFER_SCRIBE, ats.WAFER_ID, ats.devrevstep, idriss.Touchdowns
                                 from a_testing_session   ats,
                                     (
                                         select ats.WAFER_ID, ats.devrevstep, COUNT(ats.WAFER_ID) as Touchdowns
                                         from a_testing_session   ats
-                                        where (ats.LOT like '3%' or ats.LOT like '4%') 
+                                        where ISNUMERIC(SUBSTRING(ats.LOT, 1, 1)) = 1 
                                         """ + devrevstep + """
                                         and   ats.latest_flag = 'Y'
                                         group by ats.WAFER_ID, ats.devrevstep
@@ -171,7 +171,7 @@ def cbsql_basic():
                                     ) idriss
 
                                 where
-                                (ats.LOT like '3%' or ats.LOT like '4%') 
+                                ISNUMERIC(SUBSTRING(ats.LOT, 1, 1)) = 1 
                                 and ats.devrevstep = idriss.devrevstep
                                 and ats.WAFER_ID = idriss.WAFER_ID
                                 and ats.latest_flag = 'Y'
@@ -187,16 +187,16 @@ def cbsql_basic():
                             and ats.latest_flag   = 'Y'
                             order by ats.devrevstep, ats.WAFER_ID
                             ) table
-                        where table.PROD_LOT = 'NO_PROD_LOT'
-                        group by table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT
+                        where table.SORT_LOT = 'LOT_NOT_FOUND'
+                        group by table.devrevstep, table.WAFER_ID, table.Touchdowns, table.SORT_LOT
                         order by table.devrevstep, table.WAFER_ID
                         ) NAtable
                     where NAtable.WAFER_ID in Dtable.WAFER_ID
-                    group by NAtable.devrevstep, NAtable.WAFER_ID, NAtable.Touchdowns, NAtable.PROD_LOT
+                    group by NAtable.devrevstep, NAtable.WAFER_ID, NAtable.Touchdowns, NAtable.SORT_LOT
                     order by NAtable.devrevstep, NAtable.WAFER_ID
                     )
-                or (alltable.PROD_LOT NOT LIKE '3%' AND alltable.PROD_LOT NOT LIKE '4%')
-                group by alltable.devrevstep, alltable.WAFER_ID, alltable.Touchdowns, alltable.PROD_LOT
+                or alltable.SORT_LOT != 'LOT_NOT_FOUND'
+                group by alltable.devrevstep, alltable.WAFER_ID, alltable.Touchdowns, alltable.SORT_LOT
                 order by alltable.devrevstep, alltable.WAFER_ID
 
                 </SQL >
@@ -278,19 +278,19 @@ def automate():
                 OUTPUT=
                 /ASMERLIN
                 <SQL >
-                select alltable.devrevstep, alltable.WAFER_ID, alltable.Touchdowns, alltable.PROD_LOT
+                select alltable.devrevstep, alltable.WAFER_ID, alltable.Touchdowns, alltable.SORT_LOT
                 from
                     (
-                    select table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT
+                    select table.devrevstep, table.WAFER_ID, table.Touchdowns, table.SORT_LOT
                     from (
-                        select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ats.LOT NOT LIKE '3%' AND ats.LOT NOT LIKE '4%') THEN ats.LOT ELSE 'NO_PROD_LOT' END as PROD_LOT, ats.WAFER_SCRIBE
+                        select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ISNUMERIC(SUBSTRING(ats.LOT, 1, 1))!=1) THEN ats.LOT ELSE 'LOT_NOT_FOUND' END as SORT_LOT, ats.WAFER_SCRIBE
                         from (
                             select ats.WAFER_SCRIBE, ats.WAFER_ID, ats.devrevstep, idriss.Touchdowns
                             from a_testing_session   ats,
                                 (
                                     select ats.WAFER_ID, ats.devrevstep, COUNT(ats.WAFER_ID) as Touchdowns
                                     from a_testing_session   ats
-                                    where (ats.LOT like '3%' or ats.LOT like '4%') 
+                                    where ISNUMERIC(SUBSTRING(ats.LOT, 1, 1)) = 1 
                                     """ + devrevstep + """
                                     and   ats.latest_flag = 'Y'
                                     group by ats.WAFER_ID, ats.devrevstep
@@ -298,7 +298,7 @@ def automate():
                                 ) idriss
 
                             where
-                            (ats.LOT like '3%' or ats.LOT like '4%') 
+                            ISNUMERIC(SUBSTRING(ats.LOT, 1, 1)) = 1 
                             and ats.devrevstep = idriss.devrevstep
                             and ats.WAFER_ID = idriss.WAFER_ID
                             and ats.latest_flag = 'Y'
@@ -313,7 +313,7 @@ def automate():
                             and ats.latest_flag   = 'Y'
                             order by ats.devrevstep, ats.WAFER_ID
                         ) table
-                    group by table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT
+                    group by table.devrevstep, table.WAFER_ID, table.Touchdowns, table.SORT_LOT
                     order by table.devrevstep, table.WAFER_ID
                     ) alltable
                 where alltable.WAFER_ID not in
@@ -321,16 +321,16 @@ def automate():
                     select NAtable.WAFER_ID
                     from
                         (
-                        select table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT
+                        select table.devrevstep, table.WAFER_ID, table.Touchdowns, table.SORT_LOT
                         from (
-                            select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ats.LOT NOT LIKE '3%' AND ats.LOT NOT LIKE '4%') THEN ats.LOT ELSE 'NO_PROD_LOT' END as PROD_LOT, ats.WAFER_SCRIBE
+                            select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ISNUMERIC(SUBSTRING(ats.LOT, 1, 1))!=1) THEN ats.LOT ELSE 'LOT_NOT_FOUND' END as SORT_LOT, ats.WAFER_SCRIBE
                             from (
                                 select ats.WAFER_SCRIBE, ats.WAFER_ID, ats.devrevstep, idriss.Touchdowns
                                 from a_testing_session   ats,
                                     (
                                         select ats.WAFER_ID, ats.devrevstep, COUNT(ats.WAFER_ID) as Touchdowns
                                         from a_testing_session   ats
-                                        where (ats.LOT like '3%' or ats.LOT like '4%') 
+                                        where ISNUMERIC(SUBSTRING(ats.LOT, 1, 1)) = 1 
                                         """ + devrevstep + """
                                         and   ats.latest_flag = 'Y'
                                         group by ats.WAFER_ID, ats.devrevstep
@@ -338,7 +338,7 @@ def automate():
                                     ) idriss
 
                                 where
-                                (ats.LOT like '3%' or ats.LOT like '4%') 
+                                ISNUMERIC(SUBSTRING(ats.LOT, 1, 1)) = 1 
                                 and ats.devrevstep = idriss.devrevstep
                                 and ats.WAFER_ID = idriss.WAFER_ID
                                 and ats.latest_flag = 'Y'
@@ -354,21 +354,21 @@ def automate():
                             and ats.latest_flag   = 'Y'
                             order by ats.devrevstep, ats.WAFER_ID
                             ) table
-                        where (table.PROD_LOT NOT LIKE '3%' AND table.PROD_LOT NOT LIKE '4%')
-                        group by table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT
+                        where table.SORT_LOT != 'LOT_NOT_FOUND'
+                        group by table.devrevstep, table.WAFER_ID, table.Touchdowns, table.SORT_LOT
                         order by table.devrevstep, table.WAFER_ID
                         )	Dtable,
                         (
-                        select table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT
+                        select table.devrevstep, table.WAFER_ID, table.Touchdowns, table.SORT_LOT
                         from (
-                            select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ats.LOT NOT LIKE '3%' AND ats.LOT NOT LIKE '4%') THEN ats.LOT ELSE 'NO_PROD_LOT' END as PROD_LOT, ats.WAFER_SCRIBE
+                            select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ISNUMERIC(SUBSTRING(ats.LOT, 1, 1))!=1) THEN ats.LOT ELSE 'LOT_NOT_FOUND' END as SORT_LOT, ats.WAFER_SCRIBE
                             from (
                                 select ats.WAFER_SCRIBE, ats.WAFER_ID, ats.devrevstep, idriss.Touchdowns
                                 from a_testing_session   ats,
                                     (
                                         select ats.WAFER_ID, ats.devrevstep, COUNT(ats.WAFER_ID) as Touchdowns
                                         from a_testing_session   ats
-                                        where (ats.LOT like '3%' or ats.LOT like '4%') 
+                                        where ISNUMERIC(SUBSTRING(ats.LOT, 1, 1)) = 1 
                                         """ + devrevstep + """
                                         and   ats.latest_flag = 'Y'
                                         group by ats.WAFER_ID, ats.devrevstep
@@ -376,7 +376,7 @@ def automate():
                                     ) idriss
 
                                 where
-                                (ats.LOT like '3%' or ats.LOT like '4%') 
+                                ISNUMERIC(SUBSTRING(ats.LOT, 1, 1)) = 1 
                                 and ats.devrevstep = idriss.devrevstep
                                 and ats.WAFER_ID = idriss.WAFER_ID
                                 and ats.latest_flag = 'Y'
@@ -392,16 +392,16 @@ def automate():
                             and ats.latest_flag   = 'Y'
                             order by ats.devrevstep, ats.WAFER_ID
                             ) table
-                        where table.PROD_LOT = 'NO_PROD_LOT'
-                        group by table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT
+                        where table.SORT_LOT = 'LOT_NOT_FOUND'
+                        group by table.devrevstep, table.WAFER_ID, table.Touchdowns, table.SORT_LOT
                         order by table.devrevstep, table.WAFER_ID
                         ) NAtable
                     where NAtable.WAFER_ID in Dtable.WAFER_ID
-                    group by NAtable.devrevstep, NAtable.WAFER_ID, NAtable.Touchdowns, NAtable.PROD_LOT
+                    group by NAtable.devrevstep, NAtable.WAFER_ID, NAtable.Touchdowns, NAtable.SORT_LOT
                     order by NAtable.devrevstep, NAtable.WAFER_ID
                     )
-                or (alltable.PROD_LOT NOT LIKE '3%' AND alltable.PROD_LOT NOT LIKE '4%')
-                group by alltable.devrevstep, alltable.WAFER_ID, alltable.Touchdowns, alltable.PROD_LOT
+                or alltable.SORT_LOT != 'LOT_NOT_FOUND'
+                group by alltable.devrevstep, alltable.WAFER_ID, alltable.Touchdowns, alltable.SORT_LOT
                 order by alltable.devrevstep, alltable.WAFER_ID
 
                 </SQL >

@@ -1,0 +1,134 @@
+    Script Name: 8PQFCV%-8PRNCV% 
+    Send Email To: johnDoe@intel.com 
+    Wafer/s:  [''] 
+    <analysis app=cb 
+                TOOL=RUNSQL 
+                SCHEMA=ARIES 
+                SITE=D1C 
+                OUTPUT= 
+                /ASMERLIN 
+                <SQL > 
+                select alltable.devrevstep, alltable.WAFER_ID, alltable.Touchdowns, alltable.PROD_LOT 
+                from 
+                    ( 
+                    select table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT 
+                    from ( 
+                        select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ats.LOT NOT LIKE '3%' AND ats.LOT NOT LIKE '4%') THEN ats.LOT ELSE 'NO_PROD_LOT' END as PROD_LOT, ats.WAFER_SCRIBE
+                        from ( 
+                            select ats.WAFER_SCRIBE, ats.WAFER_ID, ats.devrevstep, idriss.Touchdowns 
+                            from a_testing_session   ats, 
+                                ( 
+                                    select ats.WAFER_ID, ats.devrevstep, COUNT(ats.WAFER_ID) as Touchdowns 
+                                    from a_testing_session   ats 
+                                    where (ats.LOT like '3%' or ats.LOT like '4%') 
+                                    and (ats.devrevstep like '8PQFCV%'or ats.devrevstep like '8PRNCV%') 
+                                    and   ats.latest_flag = 'Y' 
+                                    group by ats.WAFER_ID, ats.devrevstep 
+                                    order by ats.devrevstep, ats.WAFER_ID 
+                                ) idriss 
+                            where 
+                            (ats.LOT like '3%' or ats.LOT like '4%') 
+                            and ats.devrevstep = idriss.devrevstep 
+                            and ats.WAFER_ID = idriss.WAFER_ID 
+                            and ats.latest_flag = 'Y' 
+                            and ats.WAFER_SCRIBE IS NOT NULL 
+                            group by ats.WAFER_ID, ats.devrevstep, ats.WAFER_SCRIBE, idriss.Touchdowns 
+                            order by ats.devrevstep, ats.WAFER_ID 
+                            ) afs, 
+                            a_testing_session   ats 
+                        where 
+                            ats.WAFER_SCRIBE = afs.WAFER_SCRIBE 
+                            and (ats.devrevstep like '8PQFCV%'or ats.devrevstep like '8PRNCV%') 
+                            and ats.latest_flag   = 'Y' 
+                            order by ats.devrevstep, ats.WAFER_ID 
+                        ) table 
+                    group by table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT 
+                    order by table.devrevstep, table.WAFER_ID 
+                    ) alltable 
+                where alltable.WAFER_ID not in 
+                    ( 
+                    select NAtable.WAFER_ID 
+                    from 
+                        ( 
+                        select table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT 
+                        from ( 
+                            select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ats.LOT NOT LIKE '3%' AND ats.LOT NOT LIKE '4%') THEN ats.LOT ELSE 'NO_PROD_LOT' END as PROD_LOT, ats.WAFER_SCRIBE
+                            from ( 
+                                select ats.WAFER_SCRIBE, ats.WAFER_ID, ats.devrevstep, idriss.Touchdowns 
+                                from a_testing_session   ats, 
+                                    ( 
+                                        select ats.WAFER_ID, ats.devrevstep, COUNT(ats.WAFER_ID) as Touchdowns 
+                                        from a_testing_session   ats 
+                                        where (ats.LOT like '3%' or ats.LOT like '4%') 
+                                        and (ats.devrevstep like '8PQFCV%'or ats.devrevstep like '8PRNCV%') 
+                                        and   ats.latest_flag = 'Y' 
+                                        group by ats.WAFER_ID, ats.devrevstep 
+                                        order by ats.devrevstep, ats.WAFER_ID 
+                                    ) idriss 
+                                where 
+                                (ats.LOT like '3%' or ats.LOT like '4%') 
+                                and ats.devrevstep = idriss.devrevstep 
+                                and ats.WAFER_ID = idriss.WAFER_ID 
+                                and ats.latest_flag = 'Y' 
+                                and ats.WAFER_SCRIBE IS NOT NULL 
+                                group by ats.WAFER_ID, ats.devrevstep, ats.WAFER_SCRIBE, idriss.Touchdowns 
+                                order by ats.devrevstep, ats.WAFER_ID 
+                                ) afs, 
+                                
+                                a_testing_session   ats 
+                            where 
+                            ats.WAFER_SCRIBE = afs.WAFER_SCRIBE 
+                            and (ats.devrevstep like '8PQFCV%'or ats.devrevstep like '8PRNCV%') 
+                            and ats.latest_flag   = 'Y' 
+                            order by ats.devrevstep, ats.WAFER_ID 
+                            ) table 
+                        where table.PROD_LOT != 'NO_PROD_LOT' 
+                        group by table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT 
+                        order by table.devrevstep, table.WAFER_ID 
+                        )       Dtable, 
+                        ( 
+                        select table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT 
+                        from ( 
+                            select  ats.devrevstep, ats.WAFER_ID, afs.Touchdowns, CASE WHEN (ats.LOT NOT LIKE '3%' AND ats.LOT NOT LIKE '4%') THEN ats.LOT ELSE 'NO_PROD_LOT' END as PROD_LOT, ats.WAFER_SCRIBE
+                            from ( 
+                                select ats.WAFER_SCRIBE, ats.WAFER_ID, ats.devrevstep, idriss.Touchdowns 
+                                from a_testing_session   ats, 
+                                    ( 
+                                        select ats.WAFER_ID, ats.devrevstep, COUNT(ats.WAFER_ID) as Touchdowns 
+                                        from a_testing_session   ats 
+                                        where (ats.LOT like '3%' or ats.LOT like '4%') 
+                                        and (ats.devrevstep like '8PQFCV%'or ats.devrevstep like '8PRNCV%') 
+                                        and   ats.latest_flag = 'Y' 
+                                        group by ats.WAFER_ID, ats.devrevstep 
+                                        order by ats.devrevstep, ats.WAFER_ID 
+                                    ) idriss 
+                                where 
+                                (ats.LOT like '3%' or ats.LOT like '4%') 
+                                and ats.devrevstep = idriss.devrevstep 
+                                and ats.WAFER_ID = idriss.WAFER_ID 
+                                and ats.latest_flag = 'Y' 
+                                and ats.WAFER_SCRIBE IS NOT NULL 
+                                group by ats.WAFER_ID, ats.devrevstep, ats.WAFER_SCRIBE, idriss.Touchdowns 
+                                order by ats.devrevstep, ats.WAFER_ID 
+                                ) afs, 
+                                
+                                a_testing_session   ats 
+                            where 
+                            ats.WAFER_SCRIBE = afs.WAFER_SCRIBE 
+                            and (ats.devrevstep like '8PQFCV%'or ats.devrevstep like '8PRNCV%') 
+                            and ats.latest_flag   = 'Y' 
+                            order by ats.devrevstep, ats.WAFER_ID 
+                            ) table 
+                        where table.PROD_LOT = 'NO_PROD_LOT' 
+                        group by table.devrevstep, table.WAFER_ID, table.Touchdowns, table.PROD_LOT 
+                        order by table.devrevstep, table.WAFER_ID 
+                        ) NAtable 
+                    where NAtable.WAFER_ID in Dtable.WAFER_ID 
+                    group by NAtable.devrevstep, NAtable.WAFER_ID, NAtable.Touchdowns, NAtable.PROD_LOT 
+                    order by NAtable.devrevstep, NAtable.WAFER_ID 
+                    ) 
+                or alltable.PROD_LOT != 'NO_PROD_LOT' 
+                group by alltable.devrevstep, alltable.WAFER_ID, alltable.Touchdowns, alltable.PROD_LOT 
+                order by alltable.devrevstep, alltable.WAFER_ID 
+                </SQL > 
+                </analysis> 

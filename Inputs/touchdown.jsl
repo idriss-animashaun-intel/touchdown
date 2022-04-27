@@ -9,20 +9,21 @@ Open("C:\Scripts");
 Current Data Table():WAFER_ID << Data Type( Character );
 
 Graph Builder(
-	Size( 1181, 870 ),
+	Size( 1292, 1081 ),
 	Variables(
 		X( :DEVREVSTEP ),
+		X( :SORT_LOT, Position( 1 ) ),
 		X( :WAFER_ID, Position( 1 ) ),
 		Y( :TOUCHDOWNS ),
 		Color( :DEVREVSTEP )
 	),
-	Elements( Bar( X( 2 ), X( 1 ), Y, Legend( 8 ) ) ),
+	Elements( Bar( X( 3 ), X( 1 ), X( 2 ), Y, Legend( 8 ) ) ),
 	SendToReport(
 		Dispatch(
 			{},
 			"graph title",
 			TextEditBox,
-			{Set Text( "No. of Touchdowns by Product/Wafer" )}
+			{Set Text( "No. of Touchdowns by Product/Wafer/LOT" )}
 		),
 		Dispatch(
 			{},

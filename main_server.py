@@ -21,12 +21,26 @@ dir = os.path.join("automated_outputs")
 if not os.path.exists(dir):
     os.mkdir(dir)
 
-def cbsql_basic():
+def interate():
+    # assign directory
+    directory = r'automated_requests'
+
+    # iterate over files in
+    # that directory
+    for filename in os.listdir(directory):
+        f = os.path.join(directory, filename)
+        # checking if it is a file
+        if os.path.isfile(f):
+            print(f)
+            cbsql_basic(f)
+
+def cbsql_basic(filename):
     global output_file
     global file_name
     global td_file_lines
+    global file_name
 
-    filename = r'automated_requests\test.txt'
+    # filename = r'automated_requests\test2.txt'
 
     with open(filename, 'r') as fh:
         td_file_lines = [str(line) for line in fh]
@@ -115,8 +129,12 @@ def run_jrp():
     #     writing_file = open(user_script, "w")
     #     writing_file.write(new_file_content)
     #     writing_file.close()
+    send_mail()
+
+def send_mail():
+    print('hello')
+
 
 
 cblocation = cbilocator()
-
-cbsql_basic()
+interate()

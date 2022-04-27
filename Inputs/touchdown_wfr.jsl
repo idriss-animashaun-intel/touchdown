@@ -19,6 +19,7 @@ Graph Builder(
 	Size( 1181, 870 ),
 	Variables(
 		X( :DEVREVSTEP ),
+		X( :SORT_LOT, Position( 1 ) ),
 		X( :WAFER_ID, Position( 1 ) ),
 		Y( :TOUCHDOWNS ),
 		Color( :DEVREVSTEP )
@@ -29,7 +30,7 @@ Graph Builder(
 			{},
 			"graph title",
 			TextEditBox,
-			{Set Text( "No. of Touchdowns by Product/Wafer" )}
+			{Set Text( "No. of Touchdowns by Product/Wafer/LOT" )}
 		),
 		Dispatch(
 			{},
