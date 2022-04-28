@@ -1,6 +1,7 @@
 pyinstaller --noconfirm --onedir --console ^
 --add-data "Inputs;Inputs/" ^
 --add-data "cbcli_locator.bat;." ^
+--add-data "cbcli_locator_deep.bat;." ^
 "main.py"
 
 pyinstaller --noconfirm --onefile --console ^
