@@ -1,18 +1,10 @@
 import os
-from tkinter import *
-from tkinter import Tk
-from tkinter import Button
-from tkinter import ttk
-from tkinter import Label
-from tkinter import W
-import webbrowser
 from subprocess import call
 from re import sub
 from os import remove
 import datetime
 import win32com.client as win32
 import pandas as pd
-import json
 from general_lib import *
 
 location = os.getcwd()
