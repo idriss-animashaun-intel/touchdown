@@ -22,9 +22,14 @@ if not os.path.exists(dir):
     os.mkdir(dir)
 
 def interate():
-    # assign directory
-    directory = r'automated_requests'
 
+
+    # assign directory
+    dir = r'automated_outputs'
+    for f in os.listdir(dir):
+        os.remove(os.path.join(dir, f))
+    
+    directory = r'automated_requests'
     # iterate over files in
     # that directory
     for filename in os.listdir(directory):
@@ -39,8 +44,6 @@ def cbsql_basic(filename):
     global file_name
     global td_file_lines
     global file_name
-
-    # filename = r'automated_requests\test2.txt'
 
     with open(filename, 'r') as fh:
         td_file_lines = [str(line) for line in fh]
@@ -83,27 +86,26 @@ def reformat():
         print('Query Returned Empty, No Data Found')
     
     if found_data == 1:
-        try:
-            run_jrp()
-        except:
-            print('your version of JMP is not supported. Analysis completed check automated_outputs folder for data')
+        run_jrp()
 
 def run_jrp():
     global output_file_csv
+    global file_name
 
     run_wfr = 0
 
-    jsl_path = resource_path("Inputs\\touchdown.jsl")
-
     user_script = "automated_outputs\\" + file_name + ".jrp"
-    # if td_file_lines[2] == "    Wafer/s:  [''] ":
-    #     jsl_path = resource_path("Inputs\\touchdown.jsl")
-    # else:
-    #     run_wfr = 1
-    #     jsl_path = resource_path("Inputs\\touchdown_wfr.jsl")
-    #     wfr_IDs_list = td_file_lines[2].strip("    Wafer/s:  ['")
-    #     print('wfr_IDs: ', wfr_IDs_list)
 
+    if "Wafer/s:  ['']" in td_file_lines[2]:
+        print('plotting all wafers')
+        jsl_path = resource_path("Inputs\\touchdown.jsl")
+    else:
+        print('plotting selected wafers')
+        run_wfr = 1
+        jsl_path = resource_path("Inputs\\touchdown_wfr.jsl")
+        wfr_IDs_list = td_file_lines[2].strip(" ")
+        print(wfr_IDs_list)
+        wfr_IDs_list = td_file_lines[2].strip('    Wafer/s:  ').replace(" ", "").strip('\n').replace("'", '"')
 
     reading_file = open(jsl_path, "r")
 
@@ -117,31 +119,34 @@ def run_jrp():
     writing_file.write(new_file_content)
     writing_file.close()
 
-    # if run_wfr == 1:
-    #     reading_file = open(user_script, "r")
+    if run_wfr == 1:
+        reading_file = open(user_script, "r")
 
-    #     new_file_content = ""
-    #     for line in reading_file:
-    #         stripped_line = line.strip()
-    #         new_line = stripped_line.replace("wfrs", f'{wfr_IDs_list}'.strip("[]"))
-    #         new_file_content += new_line +"\n"
-    #     reading_file.close()
-    #     writing_file = open(user_script, "w")
-    #     writing_file.write(new_file_content)
-    #     writing_file.close()
+        new_file_content = ""
+        for line in reading_file:
+            stripped_line = line.strip()
+            new_line = stripped_line.replace("wfrs", f'{wfr_IDs_list}'.strip("[]"))
+            new_file_content += new_line +"\n"
+        reading_file.close()
+        writing_file = open(user_script, "w")
+        writing_file.write(new_file_content)
+        writing_file.close()
     send_mail()
 
 def send_mail():
-    print('hello')
+    csv_file = output_file + '.csv'
+    jrp_file = output_file + ".jrp"
+
+    to_mail = td_file_lines[1].strip('Send Email To').strip(":")
     outlook = win32.Dispatch('outlook.application')
     mail = outlook.CreateItem(0)
-    mail.To = 'idriss.animashaun@intel.com'
-    mail.Subject = 'testing'
-    mail.Body = 'Report attached'
-    mail.Attachments.Add(r'C:\Users\ianimash\source\repos\touchdown\complie_exe.txt')
+    mail.To = to_mail
+    mail.Subject = 'Touchdown Report Out ' + file_name
+    mail.Body = 'Report Attached\n\n ###Note: The .csv is referenced within the .jrp.\n \tPlease ensure that the .csv is in the same file location as the .jrp before opening the .jrp\n\n Reply "STOP" to cancel automated reports to this distribution list'
+    mail.Attachments.Add(csv_file)
+    mail.Attachments.Add(jrp_file)
     mail.Send()
 
 
 cblocation = cbilocator()
-# interate()
-send_mail()
+interate()

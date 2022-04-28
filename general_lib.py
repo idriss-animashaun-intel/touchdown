@@ -22,6 +22,12 @@ def cbilocator():
         print('locator file not present. Generating locator file')
         subprocess.call("cbcli_locator.bat", shell=True)
         print('locater file generated')
-    cbloc = linereturn('cbcli_loc.txt','Production')[0]
+    try:
+        cbloc = linereturn('cbcli_loc.txt','Production')[0]
+    except:
+        print('Need to run a deeper search, please be patient')
+        subprocess.call("cbcli_locator_deep.bat", shell=True)
+        print('locater file regenerated')
+        cbloc = linereturn('cbcli_loc.txt','Production')[0]
     print("CB location: ", cbloc)
     return cbloc
