@@ -1,5 +1,5 @@
-    Script Name: 88ABCV% 
-    Send Email To: mpe_sort_ir_alp_pch@intel.com 
+    Script Name: 8PQFCV% 
+    Send Email To: conor.p.boland@intel.com 
     Wafer/s:  [''] 
     <analysis app=cb 
                 TOOL=RUNSQL 
@@ -21,7 +21,7 @@
                                     select ats.WAFER_ID, ats.devrevstep, COUNT(ats.WAFER_ID) as Touchdowns 
                                     from a_testing_session   ats 
                                     where ISNUMERIC(SUBSTRING(ats.LOT, 1, 1)) = 1 
-                                    and ats.devrevstep like '88ABCV%' 
+                                    and ats.devrevstep like '8PQFCV%' 
                                     and   ats.latest_flag = 'Y' 
                                     group by ats.WAFER_ID, ats.devrevstep 
                                     order by ats.devrevstep, ats.WAFER_ID 
@@ -38,7 +38,7 @@
                             a_testing_session   ats 
                         where 
                             ats.WAFER_SCRIBE = afs.WAFER_SCRIBE 
-                            and ats.devrevstep like '88ABCV%' 
+                            and ats.devrevstep like '8PQFCV%' 
                             and ats.latest_flag   = 'Y' 
                             order by ats.devrevstep, ats.WAFER_ID 
                         ) table 
@@ -60,7 +60,7 @@
                                         select ats.WAFER_ID, ats.devrevstep, COUNT(ats.WAFER_ID) as Touchdowns 
                                         from a_testing_session   ats 
                                         where ISNUMERIC(SUBSTRING(ats.LOT, 1, 1)) = 1 
-                                        and ats.devrevstep like '88ABCV%' 
+                                        and ats.devrevstep like '8PQFCV%' 
                                         and   ats.latest_flag = 'Y' 
                                         group by ats.WAFER_ID, ats.devrevstep 
                                         order by ats.devrevstep, ats.WAFER_ID 
@@ -78,7 +78,7 @@
                                 a_testing_session   ats 
                             where 
                             ats.WAFER_SCRIBE = afs.WAFER_SCRIBE 
-                            and ats.devrevstep like '88ABCV%' 
+                            and ats.devrevstep like '8PQFCV%' 
                             and ats.latest_flag   = 'Y' 
                             order by ats.devrevstep, ats.WAFER_ID 
                             ) table 
@@ -97,7 +97,7 @@
                                         select ats.WAFER_ID, ats.devrevstep, COUNT(ats.WAFER_ID) as Touchdowns 
                                         from a_testing_session   ats 
                                         where ISNUMERIC(SUBSTRING(ats.LOT, 1, 1)) = 1 
-                                        and ats.devrevstep like '88ABCV%' 
+                                        and ats.devrevstep like '8PQFCV%' 
                                         and   ats.latest_flag = 'Y' 
                                         group by ats.WAFER_ID, ats.devrevstep 
                                         order by ats.devrevstep, ats.WAFER_ID 
@@ -115,7 +115,7 @@
                                 a_testing_session   ats 
                             where 
                             ats.WAFER_SCRIBE = afs.WAFER_SCRIBE 
-                            and ats.devrevstep like '88ABCV%' 
+                            and ats.devrevstep like '8PQFCV%' 
                             and ats.latest_flag   = 'Y' 
                             order by ats.devrevstep, ats.WAFER_ID 
                             ) table 
