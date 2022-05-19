@@ -6,6 +6,9 @@ import datetime
 import win32com.client as win32
 import pandas as pd
 from general_lib import *
+import schedule
+import datetime
+import time
 
 location = os.getcwd()
 
@@ -140,4 +143,12 @@ def send_mail():
 
 
 cblocation = cbilocator()
-interate()
+
+def job():
+    interate()
+
+schedule.every().monday.at("08:00").do(job)
+
+while True:
+    schedule.run_pending()
+    time.sleep(30)
