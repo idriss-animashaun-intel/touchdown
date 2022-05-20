@@ -6,3 +6,9 @@ pyinstaller --noconfirm --onedir --console ^
 
 pyinstaller --noconfirm --onefile --console ^
 "Touchdown.py"
+
+pyinstaller --noconfirm --onedir --console ^
+--add-data "Inputs;Inputs/" ^
+--add-data "cbcli_locator.bat;." ^
+--add-data "cbcli_locator_deep.bat;." ^
+"main_server_scheduled.py"

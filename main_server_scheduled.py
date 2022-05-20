@@ -9,6 +9,12 @@ from general_lib import *
 import schedule
 import datetime
 import time
+from tkinter import *
+from tkinter import Tk
+from tkinter import Button
+from tkinter import ttk
+from tkinter import Label
+from tkinter import W
 
 location = os.getcwd()
 
@@ -141,14 +147,64 @@ def send_mail():
     mail.Attachments.Add(jrp_file)
     mail.Send()
 
-
-cblocation = cbilocator()
-
 def job():
     interate()
+    nowtime = str(datetime.datetime.now())
+    print('Completed run @' + nowtime)
 
-schedule.every().monday.at("08:00").do(job)
+def schedule_runs():
+    global run_sched
+    run_sched = True
+    if variable.get() == "Monday":
+        schedule.every().monday.at(prod_code.get()).do(job)
+    if variable.get() == "Tuesday":
+        schedule.every().tuesday.at(prod_code.get()).do(job)
+    if variable.get() == "Wednesday":
+        schedule.every().wednesday.at(prod_code.get()).do(job)
+    if variable.get() == "Thursday":
+        schedule.every().thursday.at(prod_code.get()).do(job)
+    if variable.get() == "Friday":
+        schedule.every().friday.at(prod_code.get()).do(job)
 
-while True:
-    schedule.run_pending()
-    time.sleep(30)
+    while run_sched == True:
+        schedule.run_pending()
+        time.sleep(30)
+
+def stop_schedule():
+    global run_sched
+    run_sched = False
+cblocation = cbilocator()
+
+### Main Root
+root = Tk()
+root.title('Touchdown Server v1.00')
+
+
+mainframe = ttk.Frame(root, padding="60 50 60 50")
+mainframe.grid(column=0, row=0, sticky=('news'))
+mainframe.columnconfigure(0, weight=3)
+mainframe.rowconfigure(0, weight=3)
+
+label_2 = Label(mainframe, text = 'Select Day: ', bg  ='black', fg = 'white')
+label_2.grid(row = 0, column = 0, sticky=E)
+variable = StringVar(mainframe)
+variable.set("Monday") # default value
+
+sel_day = OptionMenu(mainframe, variable, "Monday", "Tuesday", "Wednesday", "Thursday", "Friday")
+
+sel_day.grid(row = 0, column = 1, sticky=W)
+
+label_0 = Label(mainframe, text = 'Enter Time: ', bg  ='black', fg = 'white')
+label_0.grid(row = 1, sticky=E)
+prod_code = Entry(mainframe, width=40, relief = FLAT)
+prod_code.insert(4,"08:00")
+prod_code.grid(row = 1, column = 1, sticky=W)
+
+button_0 = Button(mainframe, text="Start", height = 1, width = 20, command = schedule_runs, bg = 'green', fg = 'white', font = '-family "SF Espresso Shack" -size 12')
+button_0.grid(row = 2, column = 0, sticky=E)
+
+button_1 = Button(mainframe, text="Stop", height = 1, width = 20, command = stop_schedule, bg = 'red', fg = 'white', font = '-family "SF Espresso Shack" -size 12')
+button_1.grid(row = 2, column = 1, sticky=W)
+
+### Main loop
+root.mainloop()
