@@ -9,6 +9,7 @@ pyinstaller --noconfirm --onefile --console ^
 
 pyinstaller --noconfirm --onedir --console ^
 --add-data "Inputs;Inputs/" ^
+--add-data "automated_requests;automated_requests/" ^
 --add-data "cbcli_locator.bat;." ^
 --add-data "cbcli_locator_deep.bat;." ^
 "main_server_scheduled.py"
