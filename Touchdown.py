@@ -11,10 +11,13 @@ touchdown_directory = touchdown_master_directory+"\\touchdown-updates"
 touchdown_file = touchdown_directory+"\\main\\main.exe"
 touchdown_rev = touchdown_directory+"\\Rev.txt"
 
+proxy_handler = urllib.request.ProxyHandler({'https': 'http://proxy-dmz.intel.com:912'})
+opener = urllib.request.build_opener(proxy_handler)
+urllib.request.install_opener(opener)
 
 def installation():
     print("*** Downloading new version ***")
-    urllib.request.urlretrieve("https://gitlab.devtools.intel.com/ianimash/touchdown/-/archive/updates/touchdown-updates.zip", touchdown_master_directory+"\\touchdown_new.zip")
+    urllib.request.urlretrieve("https://github.com/idriss-animashaun-intel/touchdown/archive/refs/heads/updates.zip", touchdown_master_directory+"\\touchdown_new.zip")
     print("*** Extracting new version ***")
     zip_ref = zipfile.ZipFile(touchdown_master_directory+"\\touchdown_new.zip", 'r')
     zip_ref.extractall(touchdown_master_directory)
@@ -35,7 +38,7 @@ def main(autoinstall=0):
         local_file_size = int(os.path.getsize(touchdown_rev))
         # print(local_file_size)
         ### Check if update needed:
-        f = urllib.request.urlopen("https://gitlab.devtools.intel.com/ianimash/touchdown/-/raw/updates/Rev.txt") # points to the exe file for size
+        f = urllib.request.urlopen("https://github.com/idriss-animashaun-intel/touchdown/raw/updates/Rev.txt") # points to the exe file for size
         i = f.info()
         web_file_size = int(i["Content-Length"])
         # print(web_file_size)
