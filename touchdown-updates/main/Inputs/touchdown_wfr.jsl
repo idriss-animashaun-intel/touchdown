@@ -1,0 +1,47 @@
+ClearLog();
+ClearSymbols();
+DeleteSymbols();
+DeleteNamespaces();
+NamesDefaultToHere( 1 );
+
+Open("C:\Scripts");
+
+Current Data Table():WAFER_ID << Data Type( Character );
+
+wafer_list = {wfrs};
+
+Current Data Table() << Select Where( Contains( wafer_list, :WAFER_ID ) == 0 );
+Current Data Table() << exclude;
+Current Data Table() << clear select;
+
+
+Graph Builder(
+	Size( 1181, 870 ),
+	Variables(
+		X( :DEVREVSTEP ),
+		X( :SORT_LOT, Position( 1 ) ),
+		X( :WAFER_ID, Position( 1 ) ),
+		Y( :TOUCHDOWNS ),
+		Color( :DEVREVSTEP )
+	),
+	Elements( Bar( X( 2 ), X( 1 ), Y, Legend( 8 ) ) ),
+	SendToReport(
+		Dispatch(
+			{},
+			"graph title",
+			TextEditBox,
+			{Set Text( "No. of Touchdowns by Product/Wafer/LOT" )}
+		),
+		Dispatch(
+			{},
+			"Graph Builder",
+			FrameBox,
+			{Add Graphics Script(
+				4,
+				Description( "Script" ),
+				Pen Color( "Red" );
+				H Line( 50 );
+			), Grid Line Order( 1 ), Reference Line Order( 3 )}
+		)
+	)
+);

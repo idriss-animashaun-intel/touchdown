@@ -1,0 +1,9 @@
+Output_touchdown
+__pycache__
+*.vs
+build
+dist
+*.spec
+main.py
+cbcli_loc.txt
+automated_outputs
